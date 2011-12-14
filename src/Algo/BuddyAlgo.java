@@ -4,54 +4,72 @@ import java.util.*;
 
 public class BuddyAlgo {
 
-	private int size;
+	private static int size;
 	static LinkedList<ArrayList<Integer>> blocks = null;
 	static int[] blockSizePool = null;
+	static ArrayList<Integer> indexPool = new ArrayList<Integer>();
 	
 	public BuddyAlgo(int size){	
 		if(!checkForPower(size)) throw new IllegalArgumentException("Size muss eine Zweierpotenz sein");	
 		this.size = size;
 		blocks = new LinkedList<ArrayList<Integer>>();
 		blocks.add(new ArrayList<Integer>());
-		blocks.get(0).add(0, 0);
-		blocks.get(0).add(1, size-1);
-		blocks.get(0).add(2, 0); 
+		blocks.get(0).add(0, size);
+		blocks.get(0).add(1, 0);
 		blockSizePool = calculateBlockPool(size);
 	}
 	
-	public static int allocateBlock(int size){
+	public static int allocateBlock(int allocateSize){
 		recycle();
-		int tempBlockSize = size;
+		int tempBlockSize = allocateSize;
 		ArrayList<Integer> blockToAllocate = null;
-		if(!checkForPower(size)){ tempBlockSize = nextBlockSize(size);}
+		if(!checkForPower(allocateSize)){ tempBlockSize = nextBlockSize(allocateSize);}
 		blockToAllocate = splitBlocks(tempBlockSize);
-		blockToAllocate.set(2, 1);
-		
-		return blocks.indexOf(blockToAllocate);
+		blockToAllocate.set(1, 1);
+		for(int i = 0; i< size; i++){
+			if(!indexPool.contains(i)){
+				if(blockToAllocate.size() == 2){blockToAllocate.add(2, i);}
+				else {blockToAllocate.set(2, i);}
+				indexPool.add(i);
+				break;
+			}
+		}
+		return blockToAllocate.get(2);
 	}
 	
 	public static void deallocateBlock(int index){
 		
-		blocks.get(index).set(2, 0);
+		for(ArrayList<Integer> x : blocks){
+			if(x.get(2) == index){
+				blocks.get(index).set(1, 0);
+				blocks.get(index).remove(2);
+				break;
+			}
+		}
+		recycle();
 	}
 	
 	public static ArrayList<Integer> splitBlocks(int size){
 		ArrayList<Integer> res = null;
 		ArrayList<Integer> lowBlock = null;
 		for(ArrayList<Integer> x : blocks){
-			if(x.get(1)-x.get(0)+1 == size && x.get(2) == 0){
+			if(x.get(0) == size && x.get(1) == 0){
 				return x;			
 			}
 		}
-		return splitBlocksHelp(smallestFittingBlock(size), size);
+		res = smallestFittingBlock(size);
+		return splitBlocksHelp(res, size);
 	}
 	
 	public static ArrayList<Integer> smallestFittingBlock(int size){
-		ArrayList<Integer> res = null;
+		ArrayList<Integer> res = new ArrayList<Integer>();
 		
 		for(ArrayList<Integer> x : blocks){
-			if(res == null && x.get(2) == 0){res = x;}
-			if(x.get(1)-x.get(0)+1 > size && x.get(2) == 0 && res.get(1)-res.get(0)+1 > x.get(1)-x.get(0)+1){res = x;}			
+			if(x.get(0) > size && x.get(1) == 0){res = x; break;}
+		}
+		
+		for(ArrayList<Integer> x : blocks){
+			if(x.get(0) > size && x.get(1) == 0 && res.get(0) > x.get(0)){res = x;}			
 		}
 		
 		return res;
@@ -59,20 +77,20 @@ public class BuddyAlgo {
 	
 	public static ArrayList<Integer> splitBlocksHelp(ArrayList<Integer> toSplit, int size){
 		ArrayList<Integer> result = new ArrayList<Integer>();
-
-		if(toSplit.get(1)-toSplit.get(0)+1 == size){
+		if(toSplit.get(0) == 0){System.out.println("why the hell"); return null;}
+		if(toSplit.get(0) == size){
 			result = toSplit;
 		} else {
 			ArrayList<Integer> temp1 = new ArrayList<Integer>();
 
 
-			toSplit.set(0, toSplit.get(0));
-			toSplit.set(1, ((toSplit.get(1)+1)/2)-1);
-			toSplit.set(2, 0);
-			temp1.add(0, (toSplit.get(1)+1)/2);
-			temp1.add(1, toSplit.get(1));
-			temp1.add(2, 0);
 
+			temp1.add(0, (toSplit.get(0)/2));
+			temp1.add(1, 0);
+			toSplit.set(0, (toSplit.get(0)/2));
+			toSplit.set(1, 0);
+System.out.println("temp: " + temp1);
+System.out.println("Split: " + toSplit);
 			blocks.add(blocks.indexOf(toSplit)+1, temp1);
 			
 			result = splitBlocksHelp(toSplit, size);
@@ -108,55 +126,41 @@ public class BuddyAlgo {
 	public static void recycle(){
 		ArrayList<Integer> temp = null;	
 		LOOP:
-		
 
 		for(ArrayList<Integer> x : blocks){
-			if(x.get(2) == 0){
+			if(x.get(1) == 0){
 				for(ArrayList<Integer> y : blocks){
-					if(y != x && y.get(1)+1 == x.get(0)&& y.get(2) == 0){
-						temp = new ArrayList<Integer>();
-						temp.add(0, y.get(0));
-						temp.add(1, x.get(1));
-						temp.add(2, 0);
-						
+
+					if(y != x  && y.get(0) == x.get(0)&& y.get(1) == 0){				
+						x.set(0, (y.get(0)*2));
+						blocks.remove(y);
 						break LOOP;
 					}
-					
-					if(y != x && x.get(1)+1 == y.get(0) && y.get(2) == 0){
-						temp = new ArrayList<Integer>();
-						temp.add(0, x.get(0));
-						temp.add(1, y.get(1));
-						temp.add(2, 0);
-						
-						
-						break LOOP;
-					}
-					
+//					System.out.println("recycle blub" + x + "," + blocks.indexOf(x) + " und " + y + "," + blocks.indexOf(y));	
+//					if(y != x){
+//						System.out.println("recycle blub, x!=y");	
+//					}
+//					if((blocks.indexOf(x)+1 == blocks.indexOf(y)||blocks.indexOf(x) == blocks.indexOf(y)+1)){
+//						System.out.println("recycle blub, index ");	
+//					}
+//					if(y.get(0) == x.get(0)){
+//						System.out.println("recycle blub, size ==");	
+//					}
+//					if(y.get(1) == 0){
+//						System.out.println("recycle blub, in use y");	
+//					}
+
 				}
-				
 			}
-			
 		}
-		
 	}
 	
 	@Override
 	public String toString(){
-		String string = "";
-		int temp = 0;
-		while(temp != size){
-			for(ArrayList<Integer> x : blocks){
-				if(temp == x.get(0)){
-					System.out.print("[" + x.get(0) + ".." + x.get(2) + ".." + x.get(1) + "] ");
-					temp = x.get(1)+1;
-					break;
-				}
-				
-			}
-			
-		}
-		System.out.println();
-		return string;
+		
+		System.out.println(blocks);
+		
+		return "";
 	}
 	
 }

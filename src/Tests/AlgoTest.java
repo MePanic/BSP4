@@ -35,9 +35,9 @@ public class AlgoTest {
 //		assertEquals(128, blub.nextBlockSize(65));
 //		assertEquals(64, blub.nextBlockSize(63));
 		
-		blub.allocateBlock(16);
+		int a = blub.allocateBlock(16);
 		blub.toString();
-		blub.allocateBlock(16);
+		int b = blub.allocateBlock(16);
 		blub.toString();
 		blub.allocateBlock(4);
 		blub.toString();
@@ -45,6 +45,12 @@ public class AlgoTest {
 		blub.toString();
 		blub.allocateBlock(16);
 		blub.toString();
+		blub.deallocateBlock(2);
+		blub.toString();
+		int i = blub.allocateBlock(16);
+		blub.toString();
+		
+		
 		
 		
 	}

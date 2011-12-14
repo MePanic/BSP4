@@ -20,16 +20,26 @@ public class BuddyAlgo {
 	}
 	
 	public int allocateBlock(int allocateSize){
+		
 		recycle();
 		int tempBlockSize = allocateSize;
 		ArrayList<Integer> blockToAllocate = null;
-		if(!checkForPower(allocateSize)){ tempBlockSize = nextBlockSize(allocateSize);}
+		
+		//nächste groessere passende Blockgroesse suchen
+		if(!checkForPower(allocateSize)){
+			tempBlockSize = nextBlockSize(allocateSize);
+		}
 		blockToAllocate = splitBlocks(tempBlockSize);
 		blockToAllocate.set(1, 1);
+		
 		for(int i = 0; i< size; i++){
 			if(!indexPool.contains(i)){
-				if(blockToAllocate.size() == 2){blockToAllocate.add(2, i);}
-				else {blockToAllocate.set(2, i);}
+				if(blockToAllocate.size() == 2){
+					blockToAllocate.add(2, i);
+				}
+				else {
+					blockToAllocate.set(2, i);
+				}
 				indexPool.add(i);
 				break;
 			}
@@ -40,14 +50,15 @@ public class BuddyAlgo {
 	public void deallocateBlock(int index){
 		for(ArrayList<Integer> x : blocks){
 			if(x.get(2) == index){
-				x.set(1, 0);
-				x.remove(2);
+				blocks.get(index).set(1, 0);
+				blocks.get(index).remove(2);
 				break;
 			}
 		}
 		recycle();
 	}
 	
+	//sucht einen passenden leeren block
 	private ArrayList<Integer> splitBlocks(int size){
 		ArrayList<Integer> res;
 		for(ArrayList<Integer> x : blocks){
@@ -55,24 +66,36 @@ public class BuddyAlgo {
 				return x;			
 			}
 		}
+		//falls kein passender gefunden wurde, splitte den naechst groesseren
 		res = smallestFittingBlock(size);
 		return splitBlocksHelp(res, size);
 	}
 	
+	//suche naechst groesseren leeren block
 	private ArrayList<Integer> smallestFittingBlock(int size){
 		ArrayList<Integer> res = new ArrayList<Integer>();
+		
 		for(ArrayList<Integer> x : blocks){
-			if(x.get(0) > size && x.get(1) == 0){res = x; break;}
+			if(x.get(0) > size && x.get(1) == 0){
+				res = x;																				//return?
+				break;
+			}
 		}
 		for(ArrayList<Integer> x : blocks){
-			if(x.get(0) > size && x.get(1) == 0 && res.get(0) > x.get(0)){res = x;}			
+			if(x.get(0) > size && x.get(1) == 0 && res.get(0) > x.get(0)){
+				res = x;
+			}			
 		}
 		return res;
 	}
 	
+	// block splitten bis einer passt
 	private ArrayList<Integer> splitBlocksHelp(ArrayList<Integer> toSplit, int size){
 		ArrayList<Integer> result = new ArrayList<Integer>();
-		if(toSplit.get(0) == 0){System.out.println("why the hell"); return null;}
+		if(toSplit.get(0) == 0){
+			System.out.println("Speicher voll");
+			return null;
+		}
 		if(toSplit.get(0) == size){
 			result = toSplit;
 		} else {
@@ -88,9 +111,12 @@ public class BuddyAlgo {
 		return result;
 	}
 	
+	//nächst groessere zulaessige blockgroesse
 	private int nextBlockSize(int oldSize){
 		for(int x : blockSizePool){
-			if(x > oldSize){ return x;}
+			if(x > oldSize){
+				return x;
+			}
 		}
 		return 0;
 	}
@@ -98,27 +124,33 @@ public class BuddyAlgo {
 	private boolean checkForPower(int x){
 		int i = 0;
 		while(Math.pow(2, i) <= x){
-			if(Math.pow(2, i) == x){return true;}
+			if(Math.pow(2, i) == x){
+				return true;
+			}
 			i++;
 		}	
 		return false;
 	}
 	
+	//alle zweier potenzen bis s in ein array schreiben
 	private int[] calculateBlockPool(int s){
 		int i;
 		for(i = 0; Math.pow(2, i) <= s; i++);		
 		int[] pool = new int[i];	
-		for(int k = 0; k < i; k++){ pool[k] = (int) Math.pow(2, k);}
+		for(int k = 0; k < i; k++){
+			pool[k] = (int) Math.pow(2, k);
+			}
 		return pool;
 	}
 	
+	//unbenutzte blöcke wieder zusammenfuegen
 	private void recycle(){
 		LOOP:
 		for(ArrayList<Integer> x : blocks){
 			if(x.get(1) == 0){
 				for(ArrayList<Integer> y : blocks){
 
-					if(y != x  && y.get(0) == x.get(0)&& y.get(1) == 0){				
+					if(y != x  && y.get(0) == x.get(0) && y.get(1) == 0){				
 						x.set(0, (y.get(0)*2));
 						blocks.remove(y);
 						break LOOP;

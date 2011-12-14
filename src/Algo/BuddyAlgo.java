@@ -40,8 +40,8 @@ public class BuddyAlgo {
 	public void deallocateBlock(int index){
 		for(ArrayList<Integer> x : blocks){
 			if(x.get(2) == index){
-				blocks.get(index).set(1, 0);
-				blocks.get(index).remove(2);
+				x.set(1, 0);
+				x.remove(2);
 				break;
 			}
 		}

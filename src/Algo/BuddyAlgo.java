@@ -10,7 +10,7 @@ public class BuddyAlgo {
 	ArrayList<Integer> indexPool = new ArrayList<Integer>();
 	
 	public BuddyAlgo(int size){	
-		if(!checkForPower(size)) throw new IllegalArgumentException("Size muss eine Zweierpotenz sein");	
+		if(!checkForPower(size)) throw new IllegalArgumentException();	
 		this.size = size;
 		blocks = new LinkedList<ArrayList<Integer>>();
 		blocks.add(new ArrayList<Integer>());
@@ -19,8 +19,8 @@ public class BuddyAlgo {
 		blockSizePool = calculateBlockPool(size);
 	}
 	
-	public int allocateBlock(int allocateSize){
-		
+	public int allocateBlock(int allocateSize) throws Exception{
+
 		recycle();
 		int tempBlockSize = allocateSize;
 		ArrayList<Integer> blockToAllocate = null;
@@ -29,7 +29,7 @@ public class BuddyAlgo {
 		if(!checkForPower(allocateSize)){
 			tempBlockSize = nextBlockSize(allocateSize);
 		}
-		blockToAllocate = splitBlocks(tempBlockSize);
+		blockToAllocate = splitBlocks(tempBlockSize);	
 		blockToAllocate.set(1, 1);
 		
 		for(int i = 0; i< size; i++){
@@ -52,10 +52,11 @@ public class BuddyAlgo {
 			if(x.get(1) == 1 && x.get(2) == index){
 				x.set(1, 0);
 				x.remove(2);
-				break;
+				recycle();
+				return;
 			}
 		}
-		recycle();
+		throw new IllegalArgumentException();
 	}
 	
 	//sucht einen passenden leeren block

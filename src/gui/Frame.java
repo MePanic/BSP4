@@ -37,6 +37,7 @@ public class Frame extends JFrame{
 	List<ArrayList<Integer>> blocks = new LinkedList<ArrayList<Integer>>();
 	double faktor = 4;
 	int x,y;
+	String status = "Waiting for Memory...";
 
 	Frame(int x,int y){
 		super("Buddy Algorithmus");
@@ -59,12 +60,19 @@ public class Frame extends JFrame{
 		buttonSize = new JButton("<HTML><CENTER><BODY>new<BR>Memory</BODY></HTML>");
 		buttonSize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-
+				status = "Everything okay";
+				try{
 				ba = new BuddyAlgo(Integer.parseInt(numFieldSize.getText()));
+				}catch(IllegalArgumentException e){
+					status = "Invalid memorysize";
+					repaint();
+					return;
+				}
 				ba.toString();
-				
 				blocks = ba.blocks();
 				repaint();
+				
+				
 				}
 			}
 		);
@@ -73,11 +81,17 @@ public class Frame extends JFrame{
 		buttonAlloc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 
-
+				try{
 				ba.allocateBlock(Integer.parseInt(numFieldAlloc.getText()));
+				}catch(Exception e){
+					status = "Not enough memory";
+					repaint();
+					return;
+				}
 				ba.toString();
 				blocks = ba.blocks();
 				repaint();
+				
 				
 				}
 			}
@@ -87,7 +101,13 @@ public class Frame extends JFrame{
 		buttonDeAlloc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 
+				try{
 				ba.deallocateBlock(Integer.parseInt(numFieldIndex.getText()));
+				}catch(Exception e){
+					status = "Unknown ID";
+					repaint();
+					return;
+				}
 				ba.toString();
 				blocks = ba.blocks();
 				repaint();
@@ -187,6 +207,9 @@ public class Frame extends JFrame{
         	next += b.get(0) *faktor;
         	}
         }
+        
+        g.drawString(status,(x/2)-(status.length()*4),(y+(oversize * 150))-50);
+		status = "Everything okay";
         
         if(next > 340 && (oversize == 0)){
         	x = next + 30;

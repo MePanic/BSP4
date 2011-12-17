@@ -8,7 +8,7 @@ import Algo.BuddyAlgo;
 public class AlgoTest {
 
 	@Test
-	public void test() {
+	public void test() throws Exception {
 		
 		assertEquals(true, true);
 		

@@ -164,6 +164,11 @@ public class BuddyAlgo {
 		}
 	}
 	
+	public List<ArrayList<Integer>> blocks(){
+		return blocks;
+	}
+	
+	
 	@Override
 	public String toString(){
 		

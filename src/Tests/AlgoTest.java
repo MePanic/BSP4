@@ -16,17 +16,25 @@ public class AlgoTest {
 		
 		blub.allocateBlock(16);
 		blub.toString();
-		blub.allocateBlock(16);
-		blub.toString();
+		blub.allocateBlock(4);
+		blub.allocateBlock(4);
+		blub.allocateBlock(4);
+		blub.allocateBlock(4);
+		blub.allocateBlock(4);
+		blub.allocateBlock(4);
 		blub.allocateBlock(4);
 		blub.toString();
-		blub.allocateBlock(16);
+		blub.deallocateBlock(3);
 		blub.toString();
-		blub.allocateBlock(16);
+		blub.deallocateBlock(4);
 		blub.toString();
+		blub.deallocateBlock(5);
+		blub.toString();
+		blub.deallocateBlock(6);
+		blub.toString();
+		blub.deallocateBlock(1);
 		blub.deallocateBlock(2);
-		blub.toString();
-		blub.allocateBlock(16);
+		blub.deallocateBlock(0);
 		blub.toString();
 		
 	}

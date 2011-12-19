@@ -119,7 +119,7 @@ public class BuddyAlgo {
 				return x;
 			}
 		}
-		return 0;
+		return blockSizePool[blockSizePool.length-1]*2;
 	}
 	
 	private boolean checkForPower(int x){

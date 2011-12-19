@@ -217,7 +217,9 @@ public class Frame extends JFrame{
         if(oversize > 0){
         	x = 1024;
         }
-        setSize(x,y+(oversize * 150));
+        
+        
+        setSize(x,(Math.min(y+(oversize * 150), 768)));
         
 	 }
     }

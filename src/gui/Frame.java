@@ -103,14 +103,14 @@ public class Frame extends JFrame{
 
 				try{
 				ba.deallocateBlock(Integer.parseInt(numFieldIndex.getText()));
-				}catch(Exception e){
-					status = "Unknown ID";
-					repaint();
-					return;
-				}
 				ba.toString();
 				blocks = ba.blocks();
 				repaint();
+				}catch(IllegalArgumentException e){
+					status = "Unknown ID";
+//					repaint();
+					return;
+				}
 
 				}
 			}

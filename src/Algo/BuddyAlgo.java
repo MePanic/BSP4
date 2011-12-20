@@ -149,18 +149,19 @@ public class BuddyAlgo {
 		
 		for(int i = blocks.size()-1; i>0;i--){
 			if(blocks.get(i).get(0) == blocks.get(i-1).get(0)){
-				if(blocks.get(i).get(1) ==  0 && blocks.get(i-1).get(1) == 0) {				
-					blocks.get(i).set(0, (blocks.get(i-1).get(0)*2));
-					blocks.remove(blocks.get(i-1));
+				i--;		
+				if(blocks.get(i+1).get(1) ==  0 && blocks.get(i).get(1) == 0) {
+							
+					blocks.get(i+1).set(0, (blocks.get(i).get(0)*2));
+					blocks.remove(i);
 					
 					i = blocks.size();
 					
 				}
-				i--;
+				
 //					//lookup
-				if(i>2 && blocks.get(i).get(0) < blocks.get(i-1).get(0)){
-					i--;
-				}
+//				if(i>=2 && blocks.get(i).get(0) == blocks.get(i-1).get(0)){
+//				}
 			}
 		}
 	}

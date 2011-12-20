@@ -7,7 +7,7 @@ public class BuddyAlgo {
 	private int size;
 	LinkedList<ArrayList<Integer>> blocks = null;
 	int[] blockSizePool = null;
-	ArrayList<Integer> indexPool = new ArrayList<Integer>();
+	HashSet<Integer> indexPool = new HashSet<Integer>();
 	
 	public BuddyAlgo(int size){	
 		if(!checkForPower(size)) throw new IllegalArgumentException();	
@@ -37,9 +37,9 @@ public class BuddyAlgo {
 				if(blockToAllocate.size() == 2){
 					blockToAllocate.add(2, i);
 				}
-				else {
-					blockToAllocate.set(2, i);
-				}
+//				else {
+//					blockToAllocate.set(2, i);
+//				}
 				indexPool.add(i);
 				break;
 			}
@@ -51,6 +51,7 @@ public class BuddyAlgo {
 		for(ArrayList<Integer> x : blocks){
 			if(x.get(1) == 1 && x.get(2) == index){
 				x.set(1, 0);
+				indexPool.remove(index);
 				x.remove(2);
 				recycle();
 				return;

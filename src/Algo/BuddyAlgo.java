@@ -25,7 +25,7 @@ public class BuddyAlgo {
 		int tempBlockSize = allocateSize;
 		ArrayList<Integer> blockToAllocate = null;
 		
-		//nächste groessere passende Blockgroesse suchen
+		//nï¿½chste groessere passende Blockgroesse suchen
 		if(!checkForPower(allocateSize)){
 			tempBlockSize = nextBlockSize(allocateSize);
 		}
@@ -112,7 +112,7 @@ public class BuddyAlgo {
 		return result;
 	}
 	
-	//nächst groessere zulaessige blockgroesse
+	//nï¿½chst groessere zulaessige blockgroesse
 	private int nextBlockSize(int oldSize){
 		for(int x : blockSizePool){
 			if(x > oldSize){
@@ -144,11 +144,11 @@ public class BuddyAlgo {
 		return pool;
 	}
 	
-	//unbenutzte blöcke wieder zusammenfuegen
+	//unbenutzte blï¿½cke wieder zusammenfuegen
 	private void recycle(){
 		
 		for(int i = blocks.size()-1; i>0;i--){
-			if(blocks.get(i).get(0) == blocks.get(i-1).get(0)){
+			if(blocks.get(i).get(0).equals(blocks.get(i-1).get(0))){
 				i--;		
 				if(blocks.get(i+1).get(1) ==  0 && blocks.get(i).get(1) == 0) {
 							
@@ -158,10 +158,6 @@ public class BuddyAlgo {
 					i = blocks.size();
 					
 				}
-				
-//					//lookup
-//				if(i>=2 && blocks.get(i).get(0) == blocks.get(i-1).get(0)){
-//				}
 			}
 		}
 	}

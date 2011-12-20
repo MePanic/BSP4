@@ -133,7 +133,7 @@ public class Frame extends JFrame{
 	}
 	
 	
-	
+	@Override
 	  public void paint( Graphics g ){
         super.paint(g);
         
